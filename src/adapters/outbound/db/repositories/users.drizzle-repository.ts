@@ -60,4 +60,17 @@ export class UsersDrizzleRepository implements IUserRepository {
   async delete(id: string): Promise<void> {
     await db.delete(usersDrizzle).where(eq(usersDrizzle.id, id))
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const [user] = await db.select().from(usersDrizzle).where(eq(usersDrizzle.email, email)).limit(1)
+    return user ? new User({
+      id: user.id,
+      name: user.name!,
+      email: user.email!,
+      password: user.password!,
+      roleId: user.roleId!,
+      createdAt: user.createdAt!,
+      updatedAt: user.updatedAt!
+    }) : null
+  }
 }

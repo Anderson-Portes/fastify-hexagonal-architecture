@@ -2,7 +2,9 @@ import { Role } from "@/domain/entities/role";
 import { RoleRepository } from "@/domain/repositories/role.repository";
 import { db } from "@/infrastructure/db";
 import { rolesDrizzle } from "../entities/roles.drizzle";
-import { eq } from "drizzle-orm";
+import { rolePermissionsDrizzle } from "../entities/rolePermissions.drizzle";
+import { permissionsDrizzle } from "../entities/permissions.drizzle";
+import { and, eq } from "drizzle-orm";
 
 export class RolesDrizzleRepository implements RoleRepository {
   async findAll(): Promise<Role[]> {
@@ -47,5 +49,29 @@ export class RolesDrizzleRepository implements RoleRepository {
 
   async delete(id: string): Promise<void> {
     await db.delete(rolesDrizzle).where(eq(rolesDrizzle.id, id))
+  }
+
+  async syncPermissions(roleId: string, permissionIds: string[]): Promise<void> {
+    await db.delete(rolePermissionsDrizzle).where(eq(rolePermissionsDrizzle.roleId, roleId))
+    if (permissionIds.length > 0) {
+      await db.insert(rolePermissionsDrizzle).values(
+        permissionIds.map((permissionId) => ({ roleId, permissionId }))
+      )
+    }
+  }
+
+  async hasPermission(roleId: string, permissionName: string): Promise<boolean> {
+    const [result] = await db
+      .select()
+      .from(rolePermissionsDrizzle)
+      .innerJoin(permissionsDrizzle, eq(rolePermissionsDrizzle.permissionId, permissionsDrizzle.id))
+      .where(
+        and(
+          eq(rolePermissionsDrizzle.roleId, roleId),
+          eq(permissionsDrizzle.name, permissionName)
+        )
+      )
+      .limit(1)
+    return !!result
   }
 }

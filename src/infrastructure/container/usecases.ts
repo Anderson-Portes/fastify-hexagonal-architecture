@@ -14,6 +14,7 @@ import { FindUserByIdUseCase } from "@/application/usecases/users/find-user-by-i
 import { UpdateUserUseCase } from "@/application/usecases/users/update-user.usecase";
 import { DeleteUserUseCase } from "@/application/usecases/users/delete-user.usecase";
 import { asClass } from "awilix";
+import { LoginUseCase } from "@/application/usecases/auth/login.usecase";
 
 export const usecases = {
   findAllRolesUseCase: asClass(FindAllRolesUseCase).scoped(),
@@ -32,5 +33,7 @@ export const usecases = {
   createUserUseCase: asClass(CreateUserUseCase).scoped(),
   findUserByIdUseCase: asClass(FindUserByIdUseCase).scoped(),
   updateUserUseCase: asClass(UpdateUserUseCase).scoped(),
-  deleteUserUseCase: asClass(DeleteUserUseCase).scoped()
+  deleteUserUseCase: asClass(DeleteUserUseCase).scoped(),
+
+  loginUseCase: asClass(LoginUseCase).scoped()
 }

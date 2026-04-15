@@ -7,6 +7,8 @@ export class CreateRoleUseCase {
 
   async execute(createRoleDto: CreateRoleDto): Promise<Role> {
     const role = new Role({ name: createRoleDto.name })
-    return this.deps.rolesRepository.create(role)
+    const created = await this.deps.rolesRepository.create(role)
+    await this.deps.rolesRepository.syncPermissions(created.id!, createRoleDto.permission_ids)
+    return created
   }
 }

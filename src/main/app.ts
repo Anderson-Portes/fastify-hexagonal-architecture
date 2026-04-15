@@ -6,6 +6,7 @@ import { permissionsRoutes } from "@/adapters/inbound/http/routes/permissions.ro
 import { usersRoutes } from "@/adapters/inbound/http/routes/users.routes";
 import { fastifyAwilixPlugin } from "@fastify/awilix";
 import { container } from "@/infrastructure/container";
+import { authRoutes } from "@/adapters/inbound/http/routes/auth.routes";
 
 const startHttpServer = () => {
   const server: FastifyInstance = fastify({
@@ -47,6 +48,7 @@ const startHttpServer = () => {
   server.register(rolesRoutes, { prefix: "/api/roles" })
   server.register(permissionsRoutes, { prefix: "/api/permissions" })
   server.register(usersRoutes, { prefix: "/api/users" })
+  server.register(authRoutes, { prefix: "/api/auth" })
 
   server.listen({ host: env.APP_HOST, port: env.APP_PORT }, (err, address) => {
     if (err) {

@@ -6,4 +6,6 @@ export interface RoleRepository {
   create(role: Role): Promise<Role>;
   update(id: string, role: Role): Promise<Role>;
   delete(id: string): Promise<void>;
+  hasPermission(roleId: string, permissionName: string): Promise<boolean>;
+  syncPermissions(roleId: string, permissionIds: string[]): Promise<void>;
 }

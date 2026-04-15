@@ -9,7 +9,9 @@ const envSchema = z.object({
   DB_PORT: z.coerce.number(),
   DB_NAME: z.string(),
   DB_USER: z.string(),
-  DB_PASSWORD: z.string()
+  DB_PASSWORD: z.string(),
+  JWT_SECRET: z.string(),
+  JWT_EXPIRES: z.string()
 });
 
 export const env = envSchema.parse(process.env);

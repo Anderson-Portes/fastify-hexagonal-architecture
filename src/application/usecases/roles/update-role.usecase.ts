@@ -7,6 +7,8 @@ export class UpdateRoleUseCase {
 
   async execute(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {
     const role = new Role({ name: updateRoleDto.name })
-    return this.deps.rolesRepository.update(id, role)
+    const updated = await this.deps.rolesRepository.update(id, role)
+    await this.deps.rolesRepository.syncPermissions(id, updateRoleDto.permission_ids)
+    return updated
   }
 }

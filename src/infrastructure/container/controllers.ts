@@ -2,9 +2,11 @@ import { RolesController } from "@/adapters/inbound/http/controllers/roles.contr
 import { PermissionsController } from "@/adapters/inbound/http/controllers/permissions.controller";
 import { UsersController } from "@/adapters/inbound/http/controllers/users.controller";
 import { asClass } from "awilix";
+import { AuthController } from "@/adapters/inbound/http/controllers/auth.controller";
 
 export const controllers = {
   rolesController: asClass(RolesController).scoped(),
   permissionsController: asClass(PermissionsController).scoped(),
-  usersController: asClass(UsersController).scoped()
+  usersController: asClass(UsersController).scoped(),
+  authController: asClass(AuthController).scoped()
 }
