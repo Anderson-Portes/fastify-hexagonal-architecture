@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { UsersController } from "../controllers/users.controller"
+import { authMiddleware } from "../middlewares/auth.middleware"
 
 const handler = (method: keyof UsersController) => async (req: FastifyRequest, reply: FastifyReply) => {
   const controller = req.diScope.resolve('usersController') as UsersController
@@ -7,9 +8,9 @@ const handler = (method: keyof UsersController) => async (req: FastifyRequest, r
 }
 
 export const usersRoutes = (fastify: FastifyInstance) => {
-  fastify.get("/", handler("findAll"))
-  fastify.get("/:id", handler("findById"))
-  fastify.post("/", handler("create"))
-  fastify.put("/:id", handler("update"))
-  fastify.delete("/:id", handler("delete"))
+  fastify.get("/", { preHandler: authMiddleware("list users") }, handler("findAll"))
+  fastify.get("/:id", { preHandler: authMiddleware("find users") }, handler("findById"))
+  fastify.post("/", { preHandler: authMiddleware("create users") }, handler("create"))
+  fastify.put("/:id", { preHandler: authMiddleware("update users") }, handler("update"))
+  fastify.delete("/:id", { preHandler: authMiddleware("delete users") }, handler("delete"))
 }

@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { PermissionsController } from "../controllers/permissions.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 const handler = (method: keyof PermissionsController) => async (req: FastifyRequest, reply: FastifyReply) => {
   const controller = req.diScope.resolve('permissionsController') as PermissionsController
@@ -7,9 +8,9 @@ const handler = (method: keyof PermissionsController) => async (req: FastifyRequ
 }
 
 export const permissionsRoutes = (fastify: FastifyInstance) => {
-  fastify.get("/", handler("findAll"))
-  fastify.get("/:id", handler("findById"))
-  fastify.post("/", handler("create"))
-  fastify.put("/:id", handler("update"))
-  fastify.delete("/:id", handler("delete"))
+  fastify.get("/", { preHandler: authMiddleware("list permissions") }, handler("findAll"))
+  fastify.get("/:id", { preHandler: authMiddleware("find permission") }, handler("findById"))
+  fastify.post("/", { preHandler: authMiddleware("create permissions") }, handler("create"))
+  fastify.put("/:id", { preHandler: authMiddleware("update permissions") }, handler("update"))
+  fastify.delete("/:id", { preHandler: authMiddleware("delete permissions") }, handler("delete"))
 }

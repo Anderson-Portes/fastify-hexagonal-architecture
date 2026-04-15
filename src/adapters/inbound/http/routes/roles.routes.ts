@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { RolesController } from "../controllers/roles.controller"
+import { authMiddleware } from "../middlewares/auth.middleware"
 
 const handler = (method: keyof RolesController) => async (req: FastifyRequest, reply: FastifyReply) => {
   const controller = req.diScope.resolve('rolesController') as RolesController
@@ -7,9 +8,9 @@ const handler = (method: keyof RolesController) => async (req: FastifyRequest, r
 }
 
 export const rolesRoutes = (fastify: FastifyInstance) => {
-  fastify.get("/", handler("findAll"))
-  fastify.get("/:id", handler("findById"))
-  fastify.post("/", handler("create"))
-  fastify.put("/:id", handler("update"))
-  fastify.delete("/:id", handler("delete"))
+  fastify.get("/", { preHandler: authMiddleware("list roles") }, handler("findAll"))
+  fastify.get("/:id", { preHandler: authMiddleware("find roles") }, handler("findById"))
+  fastify.post("/", { preHandler: authMiddleware("create roles") }, handler("create"))
+  fastify.put("/:id", { preHandler: authMiddleware("update roles") }, handler("update"))
+  fastify.delete("/:id", { preHandler: authMiddleware("delete roles") }, handler("delete"))
 }
