@@ -2,6 +2,7 @@ import fastify, { FastifyInstance } from "fastify";
 import { env } from "@/infrastructure/env";
 import { rolesRoutes } from "@/adapters/inbound/http/routes/roles.routes";
 import { ZodError } from "zod";
+import { permissionsRoutes } from "@/adapters/inbound/http/routes/permissions.routes";
 
 const startHttpServer = () => {
   const server: FastifyInstance = fastify({
@@ -37,6 +38,7 @@ const startHttpServer = () => {
   })
 
   server.register(rolesRoutes, { prefix: "/api/roles" })
+  server.register(permissionsRoutes, { prefix: "/api/permissions" })
 
   server.listen({ host: env.APP_HOST, port: env.APP_PORT }, (err, address) => {
     if (err) {

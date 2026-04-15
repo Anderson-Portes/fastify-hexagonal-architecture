@@ -1,5 +1,5 @@
 import z from "zod";
 
-export const deleteRoleParamsSchema = z.object({
+export const findPermissionByIdSchema = z.object({
   id: z.uuid("Invalid UUID")
 })
