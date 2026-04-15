@@ -1,6 +1,6 @@
 import { Role } from "../entities/role";
 
-export interface IRoleRepository {
+export interface RoleRepository {
   findAll(): Promise<Role[]>;
   findById(id: string): Promise<Role | null>;
   create(role: Role): Promise<Role>;

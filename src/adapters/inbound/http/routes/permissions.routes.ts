@@ -7,7 +7,7 @@ import { FindPermissionByIdUseCase } from "@/application/usecases/permissions/fi
 import { UpdatePermissionUseCase } from "@/application/usecases/permissions/update-permission.usecase";
 import { DeletePermissionUseCase } from "@/application/usecases/permissions/delete-permission.usecase";
 
-export async function permissionsRoutes(fastify: FastifyInstance) {
+export const permissionsRoutes = (fastify: FastifyInstance) => {
 
   const permissionDrizzleRepository = new PermissionsDrizzleRepository()
 

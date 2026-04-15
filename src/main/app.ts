@@ -3,6 +3,7 @@ import { env } from "@/infrastructure/env";
 import { rolesRoutes } from "@/adapters/inbound/http/routes/roles.routes";
 import { ZodError } from "zod";
 import { permissionsRoutes } from "@/adapters/inbound/http/routes/permissions.routes";
+import { usersRoutes } from "@/adapters/inbound/http/routes/users.routes";
 
 const startHttpServer = () => {
   const server: FastifyInstance = fastify({
@@ -39,6 +40,7 @@ const startHttpServer = () => {
 
   server.register(rolesRoutes, { prefix: "/api/roles" })
   server.register(permissionsRoutes, { prefix: "/api/permissions" })
+  server.register(usersRoutes, { prefix: "/api/users" })
 
   server.listen({ host: env.APP_HOST, port: env.APP_PORT }, (err, address) => {
     if (err) {

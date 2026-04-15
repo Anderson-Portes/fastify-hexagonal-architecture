@@ -1,10 +1,10 @@
-import { IRoleRepository } from "@/domain/repositories/irole.repository";
+import { RoleRepository } from "@/domain/repositories/role.repository";
 import { Role } from "@/domain/entities/role";
 import { UpdateRoleDto } from "@/application/dto/roles/update-role.dto";
 
 export class UpdateRoleUseCase {
   constructor(
-    private readonly roleRepository: IRoleRepository
+    private readonly roleRepository: RoleRepository
   ) { }
 
   async execute(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {

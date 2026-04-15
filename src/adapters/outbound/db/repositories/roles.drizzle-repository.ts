@@ -1,10 +1,10 @@
 import { Role } from "@/domain/entities/role";
-import { IRoleRepository } from "@/domain/repositories/irole.repository";
+import { RoleRepository } from "@/domain/repositories/role.repository";
 import { db } from "@/infrastructure/db";
 import { rolesDrizzle } from "../entities/roles.drizzle";
 import { eq } from "drizzle-orm";
 
-export class RolesDrizzleRepository implements IRoleRepository {
+export class RolesDrizzleRepository implements RoleRepository {
   async findAll(): Promise<Role[]> {
     const roles = await db.select().from(rolesDrizzle)
     return roles.map((role) => new Role({

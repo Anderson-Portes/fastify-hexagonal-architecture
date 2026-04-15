@@ -1,9 +1,9 @@
-import { IRoleRepository } from "@/domain/repositories/irole.repository";
+import { RoleRepository } from "@/domain/repositories/role.repository";
 import { Role } from "@/domain/entities/role";
 
 export class FindRoleByIdUseCase {
   constructor(
-    private readonly roleRepository: IRoleRepository
+    private readonly roleRepository: RoleRepository
   ) { }
 
   async execute(id: string): Promise<Role | null> {

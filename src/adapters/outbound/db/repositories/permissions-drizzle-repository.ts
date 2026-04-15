@@ -1,10 +1,10 @@
-import { IPermissionRepository } from "@/domain/repositories/ipermission.repository";
+import { PermissionRepository } from "@/domain/repositories/permission.repository";
 import { Permission } from "@/domain/entities/permission";
 import { db } from "@/infrastructure/db";
 import { permissionsDrizzle } from "../entities/permissions.drizzle";
 import { eq } from "drizzle-orm";
 
-export class PermissionsDrizzleRepository implements IPermissionRepository {
+export class PermissionsDrizzleRepository implements PermissionRepository {
   async create(data: Permission): Promise<Permission> {
     const [createdPermission] = await db.insert(permissionsDrizzle).values(data).returning()
     return new Permission({
