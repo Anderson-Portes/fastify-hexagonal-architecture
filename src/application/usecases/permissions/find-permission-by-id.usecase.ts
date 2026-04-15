@@ -2,11 +2,9 @@ import { PermissionRepository } from "@/domain/repositories/permission.repositor
 import { Permission } from "@/domain/entities/permission";
 
 export class FindPermissionByIdUseCase {
-  constructor(
-    private readonly permissionRepository: PermissionRepository
-  ) { }
+  constructor(private readonly deps: { permissionsRepository: PermissionRepository }) {}
 
   async execute(id: string): Promise<Permission | null> {
-    return this.permissionRepository.findById(id)
+    return this.deps.permissionsRepository.findById(id)
   }
 }

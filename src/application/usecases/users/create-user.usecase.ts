@@ -4,13 +4,11 @@ import { CreateUserDto } from "@/application/dto/users/create-user.dto";
 import bcrypt from "bcryptjs";
 
 export class CreateUserUseCase {
-  constructor(
-    private readonly userRepository: IUserRepository
-  ) { }
+  constructor(private readonly deps: { usersRepository: IUserRepository }) {}
 
   async execute(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
     const user = new User({ name: createUserDto.name, email: createUserDto.email, password: hashedPassword, roleId: createUserDto.roleId })
-    return this.userRepository.create(user)
+    return this.deps.usersRepository.create(user)
   }
 }

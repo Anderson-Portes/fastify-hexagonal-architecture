@@ -3,12 +3,10 @@ import { Role } from "@/domain/entities/role";
 import { CreateRoleDto } from "@/application/dto/roles/create-role.dto";
 
 export class CreateRoleUseCase {
-  constructor(
-    private readonly roleRepository: RoleRepository
-  ) { }
+  constructor(private readonly deps: { rolesRepository: RoleRepository }) {}
 
   async execute(createRoleDto: CreateRoleDto): Promise<Role> {
     const role = new Role({ name: createRoleDto.name })
-    return this.roleRepository.create(role)
+    return this.deps.rolesRepository.create(role)
   }
 }

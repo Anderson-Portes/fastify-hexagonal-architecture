@@ -1,31 +1,15 @@
-import { FastifyPluginAsync } from "fastify";
-import { UsersController } from "../controllers/users.controller";
-import { FindAllUsersUseCase } from "@/application/usecases/users/find-all-users.usecase";
-import { CreateUserUseCase } from "@/application/usecases/users/create-user.usecase";
-import { FindUserByIdUseCase } from "@/application/usecases/users/find-user-by-id.usecase";
-import { UpdateUserUseCase } from "@/application/usecases/users/update-user.usecase";
-import { DeleteUserUseCase } from "@/application/usecases/users/delete-user.usecase";
-import { UsersDrizzleRepository } from "@/adapters/outbound/db/repositories/users.drizzle-repository";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { UsersController } from "../controllers/users.controller"
 
-export const usersRoutes: FastifyPluginAsync = async (fastify, options) => {
-  const usersDrizzleRepository = new UsersDrizzleRepository()
+const handler = (method: keyof UsersController) => async (req: FastifyRequest, reply: FastifyReply) => {
+  const controller = req.diScope.resolve('usersController') as UsersController
+  return await controller[method](req, reply)
+}
 
-  const findAllUsersUseCase = new FindAllUsersUseCase(usersDrizzleRepository)
-  const createUserUseCase = new CreateUserUseCase(usersDrizzleRepository)
-  const findUserByIdUseCase = new FindUserByIdUseCase(usersDrizzleRepository)
-  const updateUserUseCase = new UpdateUserUseCase(usersDrizzleRepository)
-  const deleteUserUseCase = new DeleteUserUseCase(usersDrizzleRepository)
-
-  const usersController = new UsersController(
-    findAllUsersUseCase,
-    createUserUseCase,
-    findUserByIdUseCase,
-    updateUserUseCase,
-    deleteUserUseCase
-  )
-  fastify.get("/", usersController.findAll.bind(usersController))
-  fastify.get("/:id", usersController.findById.bind(usersController))
-  fastify.post("/", usersController.create.bind(usersController))
-  fastify.put("/:id", usersController.update.bind(usersController))
-  fastify.delete("/:id", usersController.delete.bind(usersController))
+export const usersRoutes = (fastify: FastifyInstance) => {
+  fastify.get("/", handler("findAll"))
+  fastify.get("/:id", handler("findById"))
+  fastify.post("/", handler("create"))
+  fastify.put("/:id", handler("update"))
+  fastify.delete("/:id", handler("delete"))
 }

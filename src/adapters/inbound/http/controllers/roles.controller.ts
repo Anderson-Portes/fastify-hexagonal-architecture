@@ -12,21 +12,23 @@ import { UpdateRoleUseCase } from "@/application/usecases/roles/update-role.usec
 
 export class RolesController {
   constructor(
-    private readonly findAllRolesUseCase: FindAllRolesUseCase,
-    private readonly createRoleUseCase: CreateRoleUseCase,
-    private readonly findRoleByIdUseCase: FindRoleByIdUseCase,
-    private readonly updateRoleUseCase: UpdateRoleUseCase,
-    private readonly deleteRoleUseCase: DeleteRoleUseCase
+    private readonly deps: {
+      findAllRolesUseCase: FindAllRolesUseCase,
+      createRoleUseCase: CreateRoleUseCase,
+      findRoleByIdUseCase: FindRoleByIdUseCase,
+      updateRoleUseCase: UpdateRoleUseCase,
+      deleteRoleUseCase: DeleteRoleUseCase,
+    }
   ) { }
 
   async findAll(request: FastifyRequest, reply: FastifyReply) {
-    const roles = await this.findAllRolesUseCase.execute()
+    const roles = await this.deps.findAllRolesUseCase.execute()
     return reply.status(200).send(roles)
   }
 
   async findById(request: FastifyRequest, reply: FastifyReply) {
     const { id } = findRoleByIdSchema.parse(request.params)
-    const role = await this.findRoleByIdUseCase.execute(id)
+    const role = await this.deps.findRoleByIdUseCase.execute(id)
     if (!role) {
       return reply.status(404).send({ message: "Role not found" })
     }
@@ -35,20 +37,20 @@ export class RolesController {
 
   async create(request: FastifyRequest, reply: FastifyReply) {
     const data = createRoleSchema.parse(request.body)
-    const role = await this.createRoleUseCase.execute(data)
+    const role = await this.deps.createRoleUseCase.execute(data)
     return reply.status(201).send(role)
   }
 
   async update(request: FastifyRequest, reply: FastifyReply) {
     const { id } = updateRoleParamsSchema.parse(request.params)
     const data = updateRoleSchema.parse(request.body)
-    const role = await this.updateRoleUseCase.execute(id, data)
+    const role = await this.deps.updateRoleUseCase.execute(id, data)
     return reply.status(200).send(role)
   }
 
   async delete(request: FastifyRequest, reply: FastifyReply) {
     const { id } = deleteRoleParamsSchema.parse(request.params)
-    await this.deleteRoleUseCase.execute(id)
+    await this.deps.deleteRoleUseCase.execute(id)
     return reply.status(204).send({ message: "Role deleted successfully" })
   }
 }

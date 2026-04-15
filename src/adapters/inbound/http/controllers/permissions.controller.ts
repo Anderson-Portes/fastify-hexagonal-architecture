@@ -11,21 +11,23 @@ import { deletePermissionParamsSchema } from "../schemas/permissions/delete-perm
 
 export class PermissionsController {
   constructor(
-    private readonly findAllPermissionsUseCase: FindAllPermissionsUseCase,
-    private readonly createPermissionUseCase: CreatePermissionUseCase,
-    private readonly findPermissionByIdUseCase: FindPermissionByIdUseCase,
-    private readonly updatePermissionUseCase: UpdatePermissionUseCase,
-    private readonly deletePermissionUseCase: DeletePermissionUseCase,
+    private readonly deps: {
+      findAllPermissionsUseCase: FindAllPermissionsUseCase,
+      createPermissionUseCase: CreatePermissionUseCase,
+      findPermissionByIdUseCase: FindPermissionByIdUseCase,
+      updatePermissionUseCase: UpdatePermissionUseCase,
+      deletePermissionUseCase: DeletePermissionUseCase,
+    }
   ) { }
 
   async findAll(request: FastifyRequest, reply: FastifyReply) {
-    const permissions = await this.findAllPermissionsUseCase.execute()
+    const permissions = await this.deps.findAllPermissionsUseCase.execute()
     return reply.status(200).send(permissions)
   }
 
   async findById(request: FastifyRequest, reply: FastifyReply) {
     const { id } = findPermissionByIdSchema.parse(request.params)
-    const permission = await this.findPermissionByIdUseCase.execute(id)
+    const permission = await this.deps.findPermissionByIdUseCase.execute(id)
     if (!permission) {
       return reply.status(404).send({ message: "Permission not found" })
     }
@@ -34,20 +36,20 @@ export class PermissionsController {
 
   async create(request: FastifyRequest, reply: FastifyReply) {
     const data = createPermissionSchema.parse(request.body)
-    const permission = await this.createPermissionUseCase.execute(data)
+    const permission = await this.deps.createPermissionUseCase.execute(data)
     return reply.status(201).send(permission)
   }
 
   async update(request: FastifyRequest, reply: FastifyReply) {
     const { id } = updatePermissionParamsSchema.parse(request.params)
     const data = updatePermissionSchema.parse(request.body)
-    const permission = await this.updatePermissionUseCase.execute(id, data)
+    const permission = await this.deps.updatePermissionUseCase.execute(id, data)
     return reply.status(200).send(permission)
   }
 
   async delete(request: FastifyRequest, reply: FastifyReply) {
     const { id } = deletePermissionParamsSchema.parse(request.params)
-    await this.deletePermissionUseCase.execute(id)
+    await this.deps.deletePermissionUseCase.execute(id)
     return reply.status(204).send({ message: "Permission deleted successfully" })
   }
 }

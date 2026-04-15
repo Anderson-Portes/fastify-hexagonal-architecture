@@ -2,11 +2,9 @@ import { RoleRepository } from "@/domain/repositories/role.repository";
 import { Role } from "@/domain/entities/role";
 
 export class FindRoleByIdUseCase {
-  constructor(
-    private readonly roleRepository: RoleRepository
-  ) { }
+  constructor(private readonly deps: { rolesRepository: RoleRepository }) {}
 
   async execute(id: string): Promise<Role | null> {
-    return this.roleRepository.findById(id)
+    return this.deps.rolesRepository.findById(id)
   }
 }

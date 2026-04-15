@@ -4,6 +4,8 @@ import { rolesRoutes } from "@/adapters/inbound/http/routes/roles.routes";
 import { ZodError } from "zod";
 import { permissionsRoutes } from "@/adapters/inbound/http/routes/permissions.routes";
 import { usersRoutes } from "@/adapters/inbound/http/routes/users.routes";
+import { fastifyAwilixPlugin } from "@fastify/awilix";
+import { container } from "@/infrastructure/container";
 
 const startHttpServer = () => {
   const server: FastifyInstance = fastify({
@@ -19,7 +21,11 @@ const startHttpServer = () => {
     },
   });
 
-
+  server.register(fastifyAwilixPlugin, {
+    container,
+    disposeOnClose: true,
+    disposeOnResponse: true
+  })
 
   server.setErrorHandler((error, request, reply) => {
     if (error instanceof ZodError) {
