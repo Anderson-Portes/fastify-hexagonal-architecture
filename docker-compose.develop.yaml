@@ -1,0 +1,30 @@
+services:
+  api:
+    container_name: fastify-hexagonal-api
+    image: node:24-alpine
+    env_file: .env
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - $APP_PORT:$APP_PORT
+    depends_on:
+      - database
+    command: npm run dev
+
+  database:
+    container_name: fastify-hexagonal-db
+    image: postgres:17-alpine
+    env_file: .env
+    environment:
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+      PGPORT: $DB_PORT
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - fastify_hexagonal_db_data:/var/lib/postgresql/data
+
+volumes:
+  fastify_hexagonal_db_data:
