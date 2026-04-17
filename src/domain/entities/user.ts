@@ -1,3 +1,5 @@
+import { Role } from "./role";
+
 export class User {
   id?: string
   name: string;
@@ -6,6 +8,7 @@ export class User {
   roleId: string;
   createdAt?: Date
   updatedAt?: Date
+  role?: Role;
 
   constructor({ id, name, email, password, roleId, createdAt, updatedAt }: { id?: string; name: string; email: string; password?: string; roleId: string; createdAt?: Date; updatedAt?: Date }) {
     this.id = id

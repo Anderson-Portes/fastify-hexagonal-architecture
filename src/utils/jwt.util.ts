@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { env } from "@/infrastructure/env";
 
-export class JwtService {
+export class JwtUtil {
   encode(payload: object, options?: SignOptions): string {
     return jwt.sign(payload, env.JWT_SECRET, {
       expiresIn: env.JWT_EXPIRES as SignOptions["expiresIn"],

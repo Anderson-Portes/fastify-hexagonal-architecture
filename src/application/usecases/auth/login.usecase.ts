@@ -1,14 +1,14 @@
 import { ZodError } from "zod";
 import { LoginDto } from "../../dto/auth/login.dto";
 import { IUserRepository } from "@/domain/repositories/users.repository";
-import { JwtService } from "@/infrastructure/services/jwt.service";
 import bcrypt from "bcryptjs";
+import { JwtUtil } from "@/utils/jwt.util";
 
 export class LoginUseCase {
   constructor(
     private readonly deps: {
       usersRepository: IUserRepository;
-      jwtService: JwtService;
+      jwtUtil: JwtUtil;
     }
   ) { }
 
@@ -25,7 +25,7 @@ export class LoginUseCase {
         code: "custom"
       }])
     }
-    const token = this.deps.jwtService.encode({ id: user.id });
+    const token = this.deps.jwtUtil.encode({ id: user.id });
     return { token };
   }
 }
